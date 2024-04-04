@@ -2,6 +2,8 @@ package _9999
 
 import (
 	"fmt"
+	"github.com/indrariksa/cobapakcage/model"
+	"github.com/indrariksa/cobapakcage/module"
 	"testing"
 )
 
@@ -11,22 +13,22 @@ func TestInsertPresensi(t *testing.T) {
 	lokasi := "Rumah"
 	phonenumber := "68122221814"
 	checkin := "masuk"
-	biodata := Karyawan{
+	biodata := model.Karyawan{
 		Nama:         "Drake",
 		Phone_number: "628456456211",
 		Jabatan:      "Rakyat Biasa",
 	}
-	hasil := InsertPresensi(long, lat, lokasi, phonenumber, checkin, biodata)
+	hasil := module.InsertPresensi(long, lat, lokasi, phonenumber, checkin, biodata)
 	fmt.Println(hasil)
 }
 
 func TestGetKaryawanFromPhoneNumber(t *testing.T) {
 	phonenumber := "68122221814"
-	biodata := GetKaryawanFromPhoneNumber(phonenumber)
+	biodata := module.GetKaryawanFromPhoneNumber(phonenumber)
 	fmt.Println(biodata)
 }
 
 func TestGetAll(t *testing.T) {
-	data := GetAllPresensi()
+	data := module.GetAllPresensi()
 	fmt.Println(data)
 }

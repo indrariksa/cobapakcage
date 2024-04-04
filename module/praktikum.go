@@ -1,8 +1,9 @@
-package _9999
+package module
 
 import (
 	"context"
 	"fmt"
+	"github.com/indrariksa/cobapakcage/model"
 	"os"
 	"time"
 
@@ -31,8 +32,8 @@ func InsertOneDoc(db string, collection string, doc interface{}) (insertedID int
 	return insertResult.InsertedID
 }
 
-func InsertPresensi(long float64, lat float64, lokasi string, phonenumber string, checkin string, biodata Karyawan) (InsertedID interface{}) {
-	var presensi Presensi
+func InsertPresensi(long float64, lat float64, lokasi string, phonenumber string, checkin string, biodata model.Karyawan) (InsertedID interface{}) {
+	var presensi model.Presensi
 	presensi.Latitude = long
 	presensi.Longitude = lat
 	presensi.Location = lokasi
@@ -43,7 +44,7 @@ func InsertPresensi(long float64, lat float64, lokasi string, phonenumber string
 	return InsertOneDoc("tesdb2024", "presensi", presensi)
 }
 
-func GetKaryawanFromPhoneNumber(phone_number string) (staf Presensi) {
+func GetKaryawanFromPhoneNumber(phone_number string) (staf model.Presensi) {
 	karyawan := MongoConnect("tesdb2024").Collection("presensi")
 	filter := bson.M{"phone_number": phone_number}
 	err := karyawan.FindOne(context.TODO(), filter).Decode(&staf)
@@ -53,7 +54,7 @@ func GetKaryawanFromPhoneNumber(phone_number string) (staf Presensi) {
 	return staf
 }
 
-func GetAllPresensi() (data []Presensi) {
+func GetAllPresensi() (data []model.Presensi) {
 	karyawan := MongoConnect("tesdb2024").Collection("presensi")
 	filter := bson.M{}
 	cursor, err := karyawan.Find(context.TODO(), filter)
