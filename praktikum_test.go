@@ -24,11 +24,14 @@ func TestInsertPresensi(t *testing.T) {
 
 func TestGetKaryawanFromPhoneNumber(t *testing.T) {
 	phonenumber := "68122221814"
-	biodata := module.GetKaryawanFromPhoneNumber(phonenumber)
+	biodata, err := module.GetKaryawanFromPhoneNumber(phonenumber, module.MongoConn, "presensi")
+	if err != nil {
+		t.Fatalf("error calling GetKaryawanFromPhoneNumber: %v", err)
+	}
 	fmt.Println(biodata)
 }
 
 func TestGetAll(t *testing.T) {
-	data := module.GetAllPresensi()
+	data := module.GetAllPresensi(module.MongoConn, "presensi")
 	fmt.Println(data)
 }

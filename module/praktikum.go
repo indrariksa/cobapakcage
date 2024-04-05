@@ -2,9 +2,9 @@ package module
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"github.com/indrariksa/cobapakcage/model"
-	"os"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -13,8 +13,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
-
-var MongoString string = os.Getenv("MONGOSTRING")
 
 func MongoConnect(dbname string) (db *mongo.Database) {
 	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(MongoString))
@@ -44,18 +42,21 @@ func InsertPresensi(long float64, lat float64, lokasi string, phonenumber string
 	return InsertOneDoc("tesdb2024", "presensi", presensi)
 }
 
-func GetKaryawanFromPhoneNumber(phone_number string) (staf model.Presensi) {
-	karyawan := MongoConnect("tesdb2024").Collection("presensi")
+func GetKaryawanFromPhoneNumber(phone_number string, db *mongo.Database, col string) (staf model.Presensi, errs error) {
+	karyawan := db.Collection(col)
 	filter := bson.M{"phone_number": phone_number}
 	err := karyawan.FindOne(context.TODO(), filter).Decode(&staf)
 	if err != nil {
-		fmt.Printf("getKaryawanFromPhoneNumber: %v\n", err)
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return staf, fmt.Errorf("no data found for phone number %s", phone_number)
+		}
+		return staf, fmt.Errorf("error retrieving data for phone number %s: %s", phone_number, err.Error())
 	}
-	return staf
+	return staf, nil
 }
 
-func GetAllPresensi() (data []model.Presensi) {
-	karyawan := MongoConnect("tesdb2024").Collection("presensi")
+func GetAllPresensi(db *mongo.Database, col string) (data []model.Presensi) {
+	karyawan := db.Collection(col)
 	filter := bson.M{}
 	cursor, err := karyawan.Find(context.TODO(), filter)
 	if err != nil {
