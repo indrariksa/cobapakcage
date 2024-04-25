@@ -69,4 +69,15 @@ func GetAllPresensi(db *mongo.Database, col string) (data []model.Presensi) {
 	return
 }
 
-///TEST GUYS
+func GetPresensiFromID(_id primitive.ObjectID, db *mongo.Database, col string) (presensi model.Presensi, errs error) {
+	karyawan := db.Collection(col)
+	filter := bson.M{"_id": _id}
+	err := karyawan.FindOne(context.TODO(), filter).Decode(&presensi)
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return presensi, fmt.Errorf("no data found for ID %s", _id)
+		}
+		return presensi, fmt.Errorf("error retrieving data for ID %s: %s", _id, err.Error())
+	}
+	return presensi, nil
+}

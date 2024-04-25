@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/indrariksa/cobapakcage/model"
 	"github.com/indrariksa/cobapakcage/module"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"testing"
 )
 
@@ -27,6 +28,19 @@ func TestGetKaryawanFromPhoneNumber(t *testing.T) {
 	biodata, err := module.GetKaryawanFromPhoneNumber(phonenumber, module.MongoConn, "presensi")
 	if err != nil {
 		t.Fatalf("error calling GetKaryawanFromPhoneNumber: %v", err)
+	}
+	fmt.Println(biodata)
+}
+
+func TestGetPresensiFromID(t *testing.T) {
+	id := "641898e76dd7bd217d69762a"
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		t.Fatalf("error converting id to ObjectID: %v", err)
+	}
+	biodata, err := module.GetPresensiFromID(objectID, module.MongoConn, "presensi")
+	if err != nil {
+		t.Fatalf("error calling GetPresensiFromID: %v", err)
 	}
 	fmt.Println(biodata)
 }
