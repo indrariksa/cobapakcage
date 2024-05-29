@@ -1,10 +1,10 @@
 module github.com/indrariksa/cobapakcage
 
-go 1.21.1
+go 1.21.3
 
 require (
 	github.com/aiteung/atdb v0.1.7
-	go.mongodb.org/mongo-driver v1.14.0
+	go.mongodb.org/mongo-driver v1.15.0
 )
 
 require (
